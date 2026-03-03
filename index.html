@@ -1293,7 +1293,13 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
   html::-webkit-scrollbar-thumb { display: none !important; background: transparent !important; }
   html::-webkit-scrollbar-track { display: none !important; background: transparent !important; }
   body::-webkit-scrollbar { display: none !important; width: 0 !important; }
-  body { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+  body { -ms-overflow-style: none !important; scrollbar-width: none !important; overflow-y: visible !important; }
+  .slide {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: unset !important;
+    overflow: visible;
+    position: relative;
+  }
   body { overflow-x: hidden; }
   .slide {
     height: auto !important; min-height: unset !important; max-height: unset !important;
@@ -2520,6 +2526,10 @@ window.addEventListener('touchstart',e=>{
   if(isMobile())return;
   touchY=e.touches[0].clientY;
 },{passive:true});
+window.addEventListener('touchmove',e=>{
+  if(isMobile())return;
+  e.preventDefault();
+},{passive:false});
 window.addEventListener('touchend',e=>{
   if(isMobile())return;
   const dy=touchY-e.changedTouches[0].clientY;

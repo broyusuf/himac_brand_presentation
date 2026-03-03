@@ -1288,19 +1288,12 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
   }
 
   /* ── Free scroll, no snap, no scrollbar ── */
-  html { scroll-snap-type: none !important; overflow-y: scroll !important; scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
-  html::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; background: transparent !important; }
-  html::-webkit-scrollbar-thumb { display: none !important; background: transparent !important; }
-  html::-webkit-scrollbar-track { display: none !important; background: transparent !important; }
+  html { scroll-snap-type: none !important; scroll-behavior: auto !important; overflow-y: scroll !important; scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
+  html::-webkit-scrollbar { display: none !important; width: 0 !important; }
+  html::-webkit-scrollbar-thumb { display: none !important; }
+  html::-webkit-scrollbar-track { display: none !important; }
+  body { overflow-x: hidden; -ms-overflow-style: none !important; scrollbar-width: none !important; }
   body::-webkit-scrollbar { display: none !important; width: 0 !important; }
-  body { -ms-overflow-style: none !important; scrollbar-width: none !important; overflow-y: visible !important; }
-  .slide {
-    scroll-snap-align: none !important;
-    scroll-snap-stop: unset !important;
-    overflow: visible;
-    position: relative;
-  }
-  body { overflow-x: hidden; }
   .slide {
     height: auto !important; min-height: unset !important; max-height: unset !important;
     scroll-snap-align: none !important; scroll-snap-stop: unset !important;
@@ -2487,6 +2480,7 @@ let curIdx=0, isScrolling=false;
 function goTo(i){
   if(i<0||i>=slides.length)return;
   curIdx=i;
+  if(isMobile()) return; // mobile: jangan hijack scroll sama sekali
   slides[i].scrollIntoView({behavior:'smooth',block:'start'});
   updateNav(i);
 }
@@ -2520,7 +2514,7 @@ window.addEventListener('wheel',e=>{
   },30);
 },{passive:false});
 
-/* Touch — HANYA desktop. Mobile: native scroll. */
+/* Touch — HANYA desktop. Mobile: native scroll sepenuhnya. */
 let touchY=0;
 window.addEventListener('touchstart',e=>{
   if(isMobile())return;

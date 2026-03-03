@@ -47,7 +47,7 @@ body {
   display:flex;align-items:center;justify-content:center;
   transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),visibility 0.9s;
 }
-#preloader.gone{opacity:0;visibility:hidden;pointer-events:none;}
+#preloader.gone{opacity:0;visibility:hidden;pointer-events:none;display:none;}
 .pre-inner{display:flex;flex-direction:column;align-items:center;gap:30px;}
 .pre-icon{width:90px;height:auto;}
 .pre-icon .pi1{fill:#F3D62A;opacity:0;animation:piDrop 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;}
@@ -2458,7 +2458,14 @@ body {
 </section>
 <script>
 /* ═══ PRELOADER ═══ */
-window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('preloader').classList.add('gone');const fl=document.getElementById('floatLogo');if(fl)fl.classList.add('on');},2700);});
+window.addEventListener('load',()=>{setTimeout(()=>{
+  const pre=document.getElementById('preloader');
+  pre.classList.add('gone');
+  const fl=document.getElementById('floatLogo');
+  if(fl)fl.classList.add('on');
+  /* iOS fix: visibility:hidden tidak cukup — hapus dari DOM setelah fade selesai */
+  setTimeout(()=>{ pre.style.display='none'; }, 1000);
+},2700);});
 
 /* ═══ CURSOR ═══ */
 const cur=document.getElementById('cur'),cring=document.getElementById('cring');

@@ -28,7 +28,6 @@
 }
 
 html {
-  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   scroll-behavior: auto; /* JS handles smoothness */
 }
@@ -76,7 +75,7 @@ body {
 .sdot.dk.on{background:var(--dark);height:22px;}
 
 /* ═══ SLIDE BASE ═══ */
-.slide{width:100vw;height:100vh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.slide{width:100vw;height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 
 /* Harmonised logo */
 /* Floating logo — fixed, always visible across all slides */
@@ -85,14 +84,22 @@ body {
 #floatLogo img{height:44px;width:auto;display:block;}
 
 /* ═══ CUSTOM SCROLLBAR — desktop only ═══ */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--yellow) rgba(244,244,249,0.04);
+/* ═══ DESKTOP ONLY — snap scroll & scrollbar ═══ */
+@media (min-width: 769px) {
+  html {
+    scroll-snap-type: y mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--yellow) rgba(244,244,249,0.04);
+  }
+  html::-webkit-scrollbar { width: 3px; }
+  html::-webkit-scrollbar-track { background: rgba(244,244,249,0.04); }
+  html::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 0; }
+  html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
+  .slide {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 }
-html::-webkit-scrollbar { width: 3px; }
-html::-webkit-scrollbar-track { background: rgba(244,244,249,0.04); }
-html::-webkit-scrollbar-thumb { background: var(--yellow); border-radius: 0; }
-html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
 
 .m-footer { display: none; }
 
@@ -1276,14 +1283,16 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
 ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ══ OVERRIDE GLOBAL SNAP & SCROLL — HARUS PERTAMA ══ */
-  html, html body {
-    scroll-snap-type: none !important;
-    scroll-behavior: auto !important;
-  }
-  .slide, .slide * {
-    scroll-snap-align: none !important;
-    scroll-snap-stop: normal !important;
+  /* ── Sembunyikan scrollbar mobile ── */
+  html { scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
+  html::-webkit-scrollbar { display: none !important; width: 0 !important; }
+  html::-webkit-scrollbar-thumb { display: none !important; }
+  html::-webkit-scrollbar-track { display: none !important; }
+  body { overflow-x: hidden; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+  body::-webkit-scrollbar { display: none !important; width: 0 !important; }
+  .slide {
+    height: auto !important; min-height: unset !important; max-height: unset !important;
+    overflow: visible; position: relative;
   }
 
   /* ── Scale tipografi ── */
@@ -1295,19 +1304,6 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
     --body: clamp(13px,3.4vw,15px);
     --small: clamp(12px,3vw,14px);
     --label: clamp(9px,2.4vw,11px);
-  }
-
-  /* ── Free scroll, no snap, no scrollbar ── */
-  html { scroll-snap-type: none !important; scroll-behavior: auto !important; overflow-y: scroll !important; scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
-  html::-webkit-scrollbar { display: none !important; width: 0 !important; }
-  html::-webkit-scrollbar-thumb { display: none !important; }
-  html::-webkit-scrollbar-track { display: none !important; }
-  body { overflow-x: hidden; -ms-overflow-style: none !important; scrollbar-width: none !important; }
-  body::-webkit-scrollbar { display: none !important; width: 0 !important; }
-  .slide {
-    height: auto !important; min-height: unset !important; max-height: unset !important;
-    scroll-snap-align: none !important; scroll-snap-stop: unset !important;
-    overflow: visible; position: relative;
   }
 
   /* ── Hide desktop chrome ── */

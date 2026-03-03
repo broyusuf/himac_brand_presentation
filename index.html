@@ -31,6 +31,13 @@ html {
   overflow-y: scroll;
   scroll-behavior: auto; /* JS handles smoothness */
 }
+/* iOS Safari: gunakan native page scroll, bukan scroll container buatan */
+@media (max-width: 768px) {
+  html {
+    overflow-y: auto !important;
+    overscroll-behavior-y: auto !important;
+  }
+}
 body {
   font-family: var(--font);
   background: var(--dark);
@@ -1283,16 +1290,24 @@ body {
 ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── Sembunyikan scrollbar mobile ── */
-  html { scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
+  /* ── Matikan snap & scrollbar ── */
+  html {
+    scroll-snap-type: none !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
   html::-webkit-scrollbar { display: none !important; width: 0 !important; }
   html::-webkit-scrollbar-thumb { display: none !important; }
   html::-webkit-scrollbar-track { display: none !important; }
   body { overflow-x: hidden; -ms-overflow-style: none !important; scrollbar-width: none !important; }
   body::-webkit-scrollbar { display: none !important; width: 0 !important; }
   .slide {
-    height: auto !important; min-height: unset !important; max-height: unset !important;
-    overflow: visible !important; position: relative;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: relative;
+    scroll-snap-align: none !important;
+    scroll-snap-stop: unset !important;
   }
 
   /* ── Scale tipografi ── */

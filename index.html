@@ -1329,9 +1329,9 @@ body {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0 !important;
-    height: 100svh !important; min-height: 100svh !important;
-    overflow: hidden !important;
+    padding: 60px 0 80px !important;
+    height: auto !important; min-height: 100svh !important;
+    overflow: visible !important;
   }
 
   /* Sembunyikan semua elemen desktop */
@@ -1494,13 +1494,13 @@ body {
   /* ════════════════════════════════════
      04  LOGO VARIATIONS
   ════════════════════════════════════ */
-  .s-logovar { padding: 0 !important; height: auto !important; min-height: 100svh !important; justify-content: flex-end !important; align-items: stretch !important; }
+  .s-logovar { padding: 0 !important; height: auto !important; min-height: unset !important; justify-content: flex-end !important; align-items: stretch !important; }
   .lv-hdr { top: 20px !important; left: 6vw !important; }
   .lv-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     grid-template-rows: repeat(3, minmax(110px,1fr)) !important;
-    height: calc(100svh - 72px) !important; gap: 2px !important;
+    height: auto !important; gap: 2px !important;
   }
   .lvc[style*="grid-column"] { grid-column: unset !important; grid-row: unset !important; }
   .lvc img { max-width: 50% !important; max-height: 30px !important; }
@@ -1643,12 +1643,12 @@ body {
   ================================ */
   .photos-hdr { top: 20px !important; left: 6vw !important; }
   .s-photos { overflow: hidden !important; }
-  .photos-grid { grid-template-rows: 50svh 50svh !important; height: 100svh !important; }
+  .photos-grid { grid-template-rows: 50svh 50svh !important; height: auto !important; }
 
   /* ════════════════════════════════════
      13  MOCKUP
   ════════════════════════════════════ */
-  .s-mockup { flex-direction: column !important; height: auto !important; min-height: 100svh !important; padding: 56px 6vw 56px !important; gap: 24px !important; align-items: stretch !important; overflow: hidden !important; }
+  .s-mockup { flex-direction: column !important; height: auto !important; min-height: unset !important; padding: 56px 6vw 56px !important; gap: 24px !important; align-items: stretch !important; overflow: visible !important; }
   .mk-info-panel { width: 100% !important; }
   .mk-info-panel h2 { font-size: var(--h2) !important; margin-bottom: 18px !important; }
   .mk-nav-item { padding: 14px 0 !important; }

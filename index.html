@@ -31,12 +31,8 @@ html {
   overflow-y: scroll;
   scroll-behavior: auto; /* JS handles smoothness */
 }
-/* iOS Safari: gunakan native page scroll, bukan scroll container buatan */
 @media (max-width: 768px) {
-  html {
-    overflow-y: auto !important;
-    overscroll-behavior-y: auto !important;
-  }
+  html { overflow-y: auto !important; scroll-snap-type: none !important; }
 }
 body {
   font-family: var(--font);
@@ -1293,6 +1289,7 @@ body {
   /* ── Matikan snap & scrollbar ── */
   html {
     scroll-snap-type: none !important;
+    overflow-y: auto !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }

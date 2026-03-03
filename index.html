@@ -1292,7 +1292,7 @@ body {
   body::-webkit-scrollbar { display: none !important; width: 0 !important; }
   .slide {
     height: auto !important; min-height: unset !important; max-height: unset !important;
-    overflow: visible; position: relative;
+    overflow: visible !important; position: relative;
   }
 
   /* ── Scale tipografi ── */
@@ -2512,34 +2512,31 @@ function updateNav(i){
 /* Mobile: scroll bebas tanpa hijack */
 const isMobile=()=>window.innerWidth<=768;
 
-/* Wheel hijack — HANYA desktop */
-let wheelTimer;
-window.addEventListener('wheel',e=>{
-  if(isMobile())return;
-  e.preventDefault();
-  clearTimeout(wheelTimer);
-  wheelTimer=setTimeout(()=>{
-    if(e.deltaY>30&&curIdx<slides.length-1){goTo(curIdx+1);}
-    else if(e.deltaY<-30&&curIdx>0){goTo(curIdx-1);}
-  },30);
-},{passive:false});
+/* Wheel + Touch — hanya didaftarkan di desktop */
+/* Di mobile: listener passive:false ini TIDAK didaftarkan sama sekali */
+let wheelTimer, touchY=0;
+if(!isMobile()){
+  window.addEventListener('wheel',e=>{
+    e.preventDefault();
+    clearTimeout(wheelTimer);
+    wheelTimer=setTimeout(()=>{
+      if(e.deltaY>30&&curIdx<slides.length-1){goTo(curIdx+1);}
+      else if(e.deltaY<-30&&curIdx>0){goTo(curIdx-1);}
+    },30);
+  },{passive:false});
 
-/* Touch — HANYA desktop. Mobile: native scroll sepenuhnya. */
-let touchY=0;
-window.addEventListener('touchstart',e=>{
-  if(isMobile())return;
-  touchY=e.touches[0].clientY;
-},{passive:true});
-window.addEventListener('touchmove',e=>{
-  if(isMobile())return;
-  e.preventDefault();
-},{passive:false});
-window.addEventListener('touchend',e=>{
-  if(isMobile())return;
-  const dy=touchY-e.changedTouches[0].clientY;
-  if(dy>50&&curIdx<slides.length-1)goTo(curIdx+1);
-  else if(dy<-50&&curIdx>0)goTo(curIdx-1);
-},{passive:true});
+  window.addEventListener('touchstart',e=>{
+    touchY=e.touches[0].clientY;
+  },{passive:true});
+  window.addEventListener('touchmove',e=>{
+    e.preventDefault();
+  },{passive:false});
+  window.addEventListener('touchend',e=>{
+    const dy=touchY-e.changedTouches[0].clientY;
+    if(dy>50&&curIdx<slides.length-1)goTo(curIdx+1);
+    else if(dy<-50&&curIdx>0)goTo(curIdx-1);
+  },{passive:true});
+}
 
 /* ═══ INTERSECTION OBSERVER for entrance events ═══ */
 const lightBgIds=['s1','s3','s6'];

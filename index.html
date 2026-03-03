@@ -1288,8 +1288,12 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
   }
 
   /* ── Free scroll, no snap, no scrollbar ── */
-  html { scroll-snap-type: none !important; overflow-y: auto; scrollbar-width: none !important; }
-  html::-webkit-scrollbar { display: none !important; width: 0 !important; }
+  html { scroll-snap-type: none !important; overflow-y: scroll !important; scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
+  html::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; background: transparent !important; }
+  html::-webkit-scrollbar-thumb { display: none !important; background: transparent !important; }
+  html::-webkit-scrollbar-track { display: none !important; background: transparent !important; }
+  body::-webkit-scrollbar { display: none !important; width: 0 !important; }
+  body { -ms-overflow-style: none !important; scrollbar-width: none !important; }
   body { overflow-x: hidden; }
   .slide {
     height: auto !important; min-height: unset !important; max-height: unset !important;

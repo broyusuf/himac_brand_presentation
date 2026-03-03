@@ -2480,42 +2480,44 @@ document.addEventListener('mousemove',e=>{
   cring.style.left=e.clientX+'px';cring.style.top=e.clientY+'px';
 });
 
-/* ═══ SMOOTH WHEEL SCROLL ═══
-   Intercept wheel events, find target slide, scroll smoothly via scrollIntoView.
-   This gives buttery feel without 3rd-party libs.
-*/
 const slides=document.querySelectorAll('.slide');
-let curIdx=0, isScrolling=false;
+let curIdx=0;
+const isMobile=()=>window.innerWidth<=768;
 
+/* ═══════════════════════════════════════════
+   DESKTOP ONLY — snap scroll + nav + wheel
+═══════════════════════════════════════════ */
 function goTo(i){
   if(i<0||i>=slides.length)return;
   curIdx=i;
-  if(isMobile()) return; // mobile: jangan hijack scroll sama sekali
   slides[i].scrollIntoView({behavior:'smooth',block:'start'});
   updateNav(i);
 }
 
 function updateNav(i){
   const sdots=document.querySelectorAll('.sdot');
-  const lightBgs=['s1','s2','s4','s9','s14']; // toc=s1, concept=s2, logovar=s4, colors=s9, close=s14
+  const lightBgs=['s1','s2','s4','s9','s14'];
   const isLight=lightBgs.includes(slides[i]?.id);
   sdots.forEach((d,j)=>{
     d.classList.toggle('on',j===i);
     if(isLight){d.classList.add('dk');}
     else{d.classList.remove('dk');}
   });
-  /* swap float logo src */
   const fl=document.getElementById('floatLogoImg');
   if(fl)fl.src=isLight?'harmonised_dark.png':'harmonised_light.png';
 }
 
-/* Mobile: scroll bebas tanpa hijack */
-const isMobile=()=>window.innerWidth<=768;
+function reAnimate(els,cls,baseDelay,stagger){
+  els.forEach((el,i)=>{
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    setTimeout(()=>el.classList.add(cls), baseDelay+(i*stagger));
+  });
+}
 
-/* Wheel + Touch — hanya didaftarkan di desktop */
-/* Di mobile: listener passive:false ini TIDAK didaftarkan sama sekali */
-let wheelTimer, touchY=0;
 if(!isMobile()){
+  /* Wheel — desktop snap */
+  let wheelTimer;
   window.addEventListener('wheel',e=>{
     e.preventDefault();
     clearTimeout(wheelTimer);
@@ -2525,114 +2527,83 @@ if(!isMobile()){
     },30);
   },{passive:false});
 
-  window.addEventListener('touchstart',e=>{
-    touchY=e.touches[0].clientY;
-  },{passive:true});
-  window.addEventListener('touchmove',e=>{
-    e.preventDefault();
-  },{passive:false});
+  /* Touch — desktop (tablet landscape) */
+  let touchY=0;
+  window.addEventListener('touchstart',e=>{touchY=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('touchmove',e=>{e.preventDefault();},{passive:false});
   window.addEventListener('touchend',e=>{
     const dy=touchY-e.changedTouches[0].clientY;
     if(dy>50&&curIdx<slides.length-1)goTo(curIdx+1);
     else if(dy<-50&&curIdx>0)goTo(curIdx-1);
   },{passive:true});
-}
 
-/* ═══ INTERSECTION OBSERVER for entrance events ═══ */
-const lightBgIds=['s1','s3','s6'];
-/* Helper: reset then re-add class to force animation restart */
-function reAnimate(els,cls,baseDelay,stagger){
-  els.forEach((el,i)=>{
-    el.classList.remove(cls);
-    // Force reflow to restart CSS animation
-    void el.offsetWidth;
-    setTimeout(()=>el.classList.add(cls), baseDelay+(i*stagger));
-  });
-}
-
-const slideObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(!e.isIntersecting)return;
-    const idx=Array.from(slides).indexOf(e.target);
-    curIdx=idx;
-    updateNav(idx);
-
-    if(e.target.classList.contains('s-close')){
-      e.target.classList.add('inv');
-    }
-
-
-    /* rv elements — re-trigger reveal on re-entry */
-    e.target.querySelectorAll('.rv').forEach((el,i)=>{
-      el.classList.remove('on');
-      void el.offsetWidth;
-      setTimeout(()=>el.classList.add('on'), 60 + i*40);
-    });
-
-
-    /* concept icon — always reset & replay */
-    if(e.target.id==='s2'){
-      const ci=document.getElementById('conIcon');
-      if(ci){
-        ci.classList.remove('on');
-        void ci.offsetWidth;
-        setTimeout(()=>{
-          ci.classList.add('on');
-          setTimeout(()=>dimBigIcon(0), 900);
-        },80);
+  /* Desktop IntersectionObserver — nav + entrance animations */
+  const slideObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const idx=Array.from(slides).indexOf(e.target);
+      curIdx=idx;
+      updateNav(idx);
+      if(e.target.classList.contains('s-close'))e.target.classList.add('inv');
+      e.target.querySelectorAll('.rv').forEach((el,i)=>{
+        el.classList.remove('on');void el.offsetWidth;
+        setTimeout(()=>el.classList.add('on'),60+i*40);
+      });
+      if(e.target.id==='s2'){
+        const ci=document.getElementById('conIcon');
+        if(ci){ci.classList.remove('on');void ci.offsetWidth;setTimeout(()=>{ci.classList.add('on');setTimeout(()=>dimBigIcon(0),900);},80);}
       }
-    }
+      if(e.target.id==='s3'){
+        const ii=document.getElementById('infoIcon');
+        if(ii){ii.classList.remove('on');void ii.offsetWidth;setTimeout(()=>ii.classList.add('on'),80);}
+      }
+      if(e.target.id==='s12')reAnimate(document.querySelectorAll('.photo-cell'),'on',0,120);
+      if(e.target.id==='s8'){reAnimate(document.querySelectorAll('.icon-cell'),'on',0,150);reAnimate(document.querySelectorAll('.sz'),'on',400,90);}
+      if(e.target.id==='s6')reAnimate(document.querySelectorAll('.do-cell'),'on',200,0);
+      if(e.target.id==='s7')reAnimate(document.querySelectorAll('.dont-cell'),'on',200,0);
+      if(e.target.id==='s10')reAnimate(e.target.querySelectorAll('.tcell'),'on',100,120);
+      if(e.target.id==='s0'){
+        const ic=document.getElementById('covIcon');
+        if(ic){ic.classList.remove('on');void ic.offsetWidth;setTimeout(()=>ic.classList.add('on'),400);}
+      }
+    });
+  },{threshold:0.5});
+  slides.forEach(s=>slideObs.observe(s));
+}
 
-    /* brand info icon — always reset & replay */
-    if(e.target.id==='s3'){
-      const ii=document.getElementById('infoIcon');
-      if(ii){ii.classList.remove('on');void ii.offsetWidth;setTimeout(()=>ii.classList.add('on'),80);}
-    }
+/* ═══════════════════════════════════════════
+   MOBILE ONLY — native scroll, animasi saja
+   Tidak ada scroll hijack, tidak ada snap,
+   tidak ada IntersectionObserver per-slide.
+═══════════════════════════════════════════ */
+if(isMobile()){
+  /* Animasi reveal sederhana pakai threshold rendah */
+  const mobileObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('on');
+        if(e.target.classList.contains('s-close'))e.target.classList.add('inv');
+      }
+    });
+  },{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv,.rvl,.rvr,.csw,.icell,.tcell,.slide').forEach(el=>mobileObs.observe(el));
+}
 
-    /* photo cells */
-    if(e.target.id==='s12')
-      reAnimate(document.querySelectorAll('.photo-cell'),'on',0,120);
+/* ═══ REVEAL ═══ — desktop only, mobile handled by mobileObs */
+if(!isMobile()){
+  const rvObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('on');}
+      else{e.target.classList.remove('on');}
+    });
+  },{threshold:0.08});
+  document.querySelectorAll('.rv,.rvl,.rvr,.csw,.icell,.tcell').forEach(el=>rvObs.observe(el));
 
-    /* icon cells — always reset & replay */
-    if(e.target.id==='s8'){
-      reAnimate(document.querySelectorAll('.icon-cell'),'on',0,150);
-      reAnimate(document.querySelectorAll('.sz'),'on',400,90);
-    }
-
-    /* do cells */
-    if(e.target.id==='s6')
-      reAnimate(document.querySelectorAll('.do-cell'),'on',200,0);
-
-    /* dont cells */
-    if(e.target.id==='s7')
-      reAnimate(document.querySelectorAll('.dont-cell'),'on',200,0);
-
-    /* type cells */
-    if(e.target.id==='s10')
-      reAnimate(e.target.querySelectorAll('.tcell'),'on',100,120);
-
-    /* cover icon */
-    if(e.target.id==='s0'){
-      const ic=document.getElementById('covIcon');
-      if(ic){ic.classList.remove('on');void ic.offsetWidth;setTimeout(()=>ic.classList.add('on'),400);}
-    }
+  document.querySelectorAll('.con-right h2 em').forEach(em=>{
+    const o=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:0.5});
+    o.observe(em);
   });
-},{threshold:0.5});
-slides.forEach(s=>slideObs.observe(s));
-
-/* ═══ REVEAL ═══ — bidirectional so re-entry re-triggers */
-const rvObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('on');}
-    else{e.target.classList.remove('on');}
-  });
-},{threshold:0.08});
-document.querySelectorAll('.rv,.rvl,.rvr,.csw,.icell,.tcell').forEach(el=>rvObs.observe(el));
-
-document.querySelectorAll('.con-right h2 em').forEach(em=>{
-  const o=new IntersectionObserver(en=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:0.5});
-  o.observe(em);
-});
+}
 
 /* ═══ PART SWITCHER ═══ */
 function switchPart(idx){

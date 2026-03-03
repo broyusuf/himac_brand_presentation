@@ -1276,6 +1276,16 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
 ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
+  /* ══ OVERRIDE GLOBAL SNAP & SCROLL — HARUS PERTAMA ══ */
+  html, html body {
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+  }
+  .slide, .slide * {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+  }
+
   /* ── Scale tipografi ── */
   :root {
     --h1: clamp(28px,8vw,42px);
@@ -1663,7 +1673,11 @@ html::-webkit-scrollbar-thumb:hover { background: #e8c800; }
   .s-close h1 { font-size: var(--h1) !important; line-height: 1.1 !important; }
   .cl-icon { right: 6vw !important; width: clamp(70px,18vw,100px) !important; }
 
-  .pre-inner { padding: 0 6vw !important; }
+  .pre-inner { padding: 0 6vw !important; text-align: center !important; align-items: center !important; }
+  .pre-label { text-align: center !important; }
+
+  /* Sembunyikan TOC di mobile */
+  .s-toc { display: none !important; }
 
   /* ════════════════════════════════════
      MOBILE FOOTER — closing section

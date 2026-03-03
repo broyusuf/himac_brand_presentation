@@ -47,7 +47,7 @@ body {
   display:flex;align-items:center;justify-content:center;
   transition:opacity 0.9s cubic-bezier(0.16,1,0.3,1),visibility 0.9s;
 }
-#preloader.gone{opacity:0;visibility:hidden;pointer-events:none;display:none;}
+#preloader.gone{opacity:0;visibility:hidden;pointer-events:none;}
 .pre-inner{display:flex;flex-direction:column;align-items:center;gap:30px;}
 .pre-icon{width:90px;height:auto;}
 .pre-icon .pi1{fill:#F3D62A;opacity:0;animation:piDrop 0.7s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;}
@@ -75,6 +75,9 @@ body {
 
 /* ═══ SLIDE BASE ═══ */
 .slide{width:100vw;height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+@media(max-width:768px){
+  .slide{height:auto!important;min-height:unset!important;overflow:visible!important;}
+}
 
 /* Harmonised logo */
 /* Floating logo — fixed, always visible across all slides */
@@ -1271,11 +1274,11 @@ body {
 @media (max-width: 768px) {
 
   /* ── Sembunyikan scrollbar mobile ── */
-  html { scrollbar-width: none !important; -ms-overflow-style: none !important; -webkit-overflow-scrolling: touch; }
+  html { scroll-snap-type: none !important; scrollbar-width: none !important; -ms-overflow-style: none !important; }
   html::-webkit-scrollbar { display: none !important; width: 0 !important; }
   html::-webkit-scrollbar-thumb { display: none !important; }
   html::-webkit-scrollbar-track { display: none !important; }
-  body { overflow-x: hidden; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+  body { overflow-x: clip; -ms-overflow-style: none !important; scrollbar-width: none !important; }
   body::-webkit-scrollbar { display: none !important; width: 0 !important; }
   .slide {
     height: auto !important; min-height: unset !important; max-height: unset !important;
@@ -1317,8 +1320,8 @@ body {
     align-items: center !important;
     justify-content: center !important;
     padding: 0 !important;
-    height: 100svh !important; min-height: 100svh !important;
-    overflow: hidden !important;
+    height: auto !important; min-height: 100svh !important;
+    overflow: visible !important;
   }
 
   /* Sembunyikan semua elemen desktop */
@@ -1629,13 +1632,13 @@ body {
      12  PHOTOGRAPHY
   ================================ */
   .photos-hdr { top: 20px !important; left: 6vw !important; }
-  .s-photos { overflow: hidden !important; }
-  .photos-grid { grid-template-rows: 50svh 50svh !important; height: 100svh !important; }
+  .s-photos { overflow: visible !important; }
+  .photos-grid { grid-template-rows: 50svh 50svh !important; height: auto !important; }
 
   /* ════════════════════════════════════
      13  MOCKUP
   ════════════════════════════════════ */
-  .s-mockup { flex-direction: column !important; height: auto !important; min-height: 100svh !important; padding: 56px 6vw 56px !important; gap: 24px !important; align-items: stretch !important; overflow: hidden !important; }
+  .s-mockup { flex-direction: column !important; height: auto !important; min-height: 100svh !important; padding: 56px 6vw 56px !important; gap: 24px !important; align-items: stretch !important; overflow: visible !important; }
   .mk-info-panel { width: 100% !important; }
   .mk-info-panel h2 { font-size: var(--h2) !important; margin-bottom: 18px !important; }
   .mk-nav-item { padding: 14px 0 !important; }
@@ -2458,14 +2461,7 @@ body {
 </section>
 <script>
 /* ═══ PRELOADER ═══ */
-window.addEventListener('load',()=>{setTimeout(()=>{
-  const pre=document.getElementById('preloader');
-  pre.classList.add('gone');
-  const fl=document.getElementById('floatLogo');
-  if(fl)fl.classList.add('on');
-  /* iOS fix: visibility:hidden tidak cukup — hapus dari DOM setelah fade selesai */
-  setTimeout(()=>{ pre.style.display='none'; }, 1000);
-},2700);});
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('preloader').classList.add('gone');const fl=document.getElementById('floatLogo');if(fl)fl.classList.add('on');},2700);});
 
 /* ═══ CURSOR ═══ */
 const cur=document.getElementById('cur'),cring=document.getElementById('cring');

@@ -48,27 +48,25 @@ if(!isMobile()){
   window.addEventListener('wheel',e=>{
     e.preventDefault();
 
-    if(isScrolling)return;
+    if(isScrolling){wheelAccum=0;return;}
 
     wheelAccum+=e.deltaY;
 
     clearTimeout(wheelTimer);
-    wheelTimer=setTimeout(()=>{wheelAccum=0;},200);
+    wheelTimer=setTimeout(()=>{wheelAccum=0;},120);
 
     if(Math.abs(wheelAccum)>=THRESHOLD){
       const dir=wheelAccum>0?1:-1;
       wheelAccum=0;
       clearTimeout(wheelTimer);
+      isScrolling=true;
 
       if(dir>0&&curIdx<slides.length-1){
-        isScrolling=true;
         goTo(curIdx+1);
-        setTimeout(()=>{isScrolling=false;},COOLDOWN);
       } else if(dir<0&&curIdx>0){
-        isScrolling=true;
         goTo(curIdx-1);
-        setTimeout(()=>{isScrolling=false;},COOLDOWN);
       }
+      setTimeout(()=>{isScrolling=false;wheelAccum=0;},COOLDOWN);
     }
   },{passive:false});
 }

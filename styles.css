@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'SuiGeneris';
+  src: url('Sui_generis.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h2 {
+  font-family: 'SuiGeneris', var(--font);
+}
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 :root{
@@ -310,7 +322,7 @@ body {
 .toc-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  grid-template-rows:repeat(6,1fr);
+  grid-template-rows:repeat(7,1fr);
   grid-auto-flow:column;
   gap:2px;
   width:100%;
@@ -581,6 +593,46 @@ body {
 .cv-cell-lht  .cv-cell-num{color:rgba(24,23,33,0.1);}
 
 .cv-cell::before{display:none;}
+
+/* ── 13 — Logo Evolution ── */
+.s-logoevo{background:var(--light);flex-direction:column;padding:54px 9vw 48px;align-items:flex-start;justify-content:center;gap:0;}
+.evo-hdr{margin-bottom:32px;}
+.evo-hdr .stag{font-size:var(--label);letter-spacing:0.32em;text-transform:uppercase;color:rgba(24,23,33,0.18);margin-bottom:8px;display:block;}
+.evo-hdr h2{font-size:var(--h2);font-weight:700;letter-spacing:-0.025em;color:var(--dark);line-height:1;}
+
+.evo-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:100%;}
+
+.evo-cell{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(44px,7vh,80px) 28px clamp(36px,5vh,64px);position:relative;overflow:hidden;gap:18px;
+}
+.evo-cell-dark{background:var(--light);border:1px solid rgba(24,23,33,0.06);}
+.evo-cell-lht {background:var(--light);border:1px solid rgba(24,23,33,0.06);}
+
+.evo-cell .evo-img{
+  width:clamp(160px,22vw,320px);
+  height:clamp(60px,7.5vw,100px);
+  display:flex;align-items:center;justify-content:center;
+}
+.evo-cell .evo-img img{
+  max-width:100%;max-height:100%;
+  object-fit:contain;display:block;
+  transition:transform 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.evo-cell:hover .evo-img img{transform:scale(1.05);}
+
+.evo-cell .evo-lbl{font-size:var(--small);font-weight:600;letter-spacing:0.04em;text-align:center;}
+.evo-cell-dark .evo-lbl{color:var(--dark);}
+.evo-cell-lht  .evo-lbl{color:var(--dark);}
+
+.evo-cell-num{
+  position:absolute;top:14px;right:16px;
+  font-size:var(--label);letter-spacing:0.18em;
+}
+.evo-cell-dark .evo-cell-num{color:rgba(24,23,33,0.1);}
+.evo-cell-lht  .evo-cell-num{color:rgba(24,23,33,0.1);}
+
+.evo-cell::before{display:none;}
 
 .s-dos,.s-donts{background:var(--dark);flex-direction:column;padding:54px 9vw 48px;align-items:flex-start;justify-content:center;gap:0;}
 .dos-hdr,.donts-hdr{margin-bottom:34px;}
@@ -1364,7 +1416,20 @@ body {
   .cv-lbl { font-size: var(--small) !important; margin-top: 4px !important; }
   .cv-sub { font-size: var(--label) !important; text-align: center !important; line-height: 1.65 !important; opacity: 0.55 !important; }
 
-  
+  /* Logo Evolution mobile */
+  .s-logoevo { padding: 60px 0 0 !important; flex-direction: column !important; align-items: stretch !important; height: auto !important; }
+  .evo-hdr { padding: 0 6vw !important; margin-bottom: 20px !important; position: static !important; }
+  .evo-grid { grid-template-columns: 1fr !important; gap: 2px !important; height: auto !important; }
+  .evo-cell {
+    padding: clamp(40px,7vw,60px) 6vw !important;
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; justify-content: center !important;
+    gap: 16px !important; min-height: 190px !important;
+  }
+  .evo-cell .evo-img { width: clamp(130px,48vw,210px) !important; height: auto !important; }
+  .evo-lbl { font-size: var(--small) !important; margin-top: 4px !important; }
+
+
   .s-dos, .s-donts {
     padding: 60px 0 36px !important;
     flex-direction: column !important; align-items: stretch !important;

@@ -19,7 +19,7 @@ function reAnimate(els,cls,baseDelay,stagger){
 
 function updateNav(i){
   const sdots=document.querySelectorAll('.sdot');
-  const lightBgs=['s1','s2','s4','s9','s14'];
+  const lightBgs=['s1','s2','s4','s9','s14','s15'];
   const isLight=lightBgs.includes(slides[i]?.id);
   sdots.forEach((d,j)=>{
     d.classList.toggle('on',j===i);
@@ -37,15 +37,39 @@ function goTo(i){
 }
 
 const isMobile=()=>window.innerWidth<=768;
+
 if(!isMobile()){
-  let wheelTimer;
+  let isScrolling=false;
+  let wheelAccum=0;
+  let wheelTimer=null;
+  const THRESHOLD=60;
+  const COOLDOWN=800;
+
   window.addEventListener('wheel',e=>{
     e.preventDefault();
+
+    if(isScrolling)return;
+
+    wheelAccum+=e.deltaY;
+
     clearTimeout(wheelTimer);
-    wheelTimer=setTimeout(()=>{
-      if(e.deltaY>30&&curIdx<slides.length-1)goTo(curIdx+1);
-      else if(e.deltaY<-30&&curIdx>0)goTo(curIdx-1);
-    },30);
+    wheelTimer=setTimeout(()=>{wheelAccum=0;},200);
+
+    if(Math.abs(wheelAccum)>=THRESHOLD){
+      const dir=wheelAccum>0?1:-1;
+      wheelAccum=0;
+      clearTimeout(wheelTimer);
+
+      if(dir>0&&curIdx<slides.length-1){
+        isScrolling=true;
+        goTo(curIdx+1);
+        setTimeout(()=>{isScrolling=false;},COOLDOWN);
+      } else if(dir<0&&curIdx>0){
+        isScrolling=true;
+        goTo(curIdx-1);
+        setTimeout(()=>{isScrolling=false;},COOLDOWN);
+      }
+    }
   },{passive:false});
 }
 
@@ -93,7 +117,6 @@ function switchPart(idx){
   document.querySelectorAll('.pdesc').forEach(d=>{d.classList.remove('on');d.style.opacity='0';d.style.transform='translateY(8px)';});
   const tgt=document.getElementById('pd'+idx);
   if(tgt){tgt.classList.add('on');requestAnimationFrame(()=>{tgt.style.opacity='1';tgt.style.transform='none';});}
-  
   dimBigIcon(idx);
 }
 
@@ -101,7 +124,6 @@ function dimBigIcon(activeIdx){
   const icon=document.getElementById('conIcon');
   if(!icon)return;
   icon.querySelectorAll('polygon').forEach((p,i)=>{
-    
     p.style.transition='opacity 0.35s ease, fill 0.35s ease';
     const active=(activeIdx===0&&i===0)||(activeIdx===1&&i===1)||(activeIdx===2&&i===2);
     p.style.opacity=active?'1':'0.14';
@@ -128,17 +150,13 @@ const MK_TOTAL=5;
 const MK_TITLES=['Brand Application','Field Equipment','Site Environment','Branded Merch','Digital Presence'];
 
 function updateMk(){
-  
   document.querySelectorAll('.mk-layer').forEach((l,i)=>l.classList.toggle('on',i===mkCur));
   document.querySelectorAll('.mk-nav-item').forEach((n,i)=>n.classList.toggle('on',i===mkCur));
-  
   document.querySelectorAll('.mk-ts').forEach((t,i)=>t.classList.toggle('on',i===mkCur));
-  
   const ctr=document.getElementById('mkCtr');
   const ttl=document.getElementById('mkTitle');
   if(ctr)ctr.textContent=String(mkCur+1).padStart(2,'0')+' / '+String(MK_TOTAL).padStart(2,'0');
   if(ttl)ttl.textContent=MK_TITLES[mkCur];
-  
   const prog=document.getElementById('mkProg');
   if(prog)prog.style.width=((mkCur+1)/MK_TOTAL*100)+'%';
 }
